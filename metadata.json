@@ -1,0 +1,6 @@
+{
+  "name": "QuickResume Builder",
+  "description": "A professional resume builder with Canva-inspired templates and AI-powered content enhancement.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["AI Content Enhancement", "Multiple Resume Templates", "Export to PDF"]
+}
