@@ -4,6 +4,7 @@ export interface Education {
   startDate: string;
   endDate: string;
   description: string;
+  gpa?: string; // GPA or Percentage
 }
 
 export interface Experience {
@@ -27,6 +28,7 @@ export interface ResumeData {
     phone: string;
     location: string;
     website?: string;
+    linkedin?: string; // LinkedIn profile
     title: string;
     summary: string;
   };
