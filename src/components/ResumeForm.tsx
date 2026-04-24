@@ -4,11 +4,10 @@ import {
   Briefcase, 
   GraduationCap, 
   Wrench, 
-  Globe, 
   MapPin, 
   Mail, 
   Phone, 
-  Link as LinkIcon,
+  Linkedin,
   Trash2,
   Plus,
   Sparkles
@@ -24,6 +23,7 @@ interface Props {
 
 export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
   const [isEnhancing, setIsEnhancing] = React.useState<string | null>(null);
+  const skillsRef = React.useRef<HTMLInputElement>(null);
 
   const updatePersonalInfo = (field: keyof ResumeData['personalInfo'], value: string) => {
     onChange({
@@ -59,7 +59,7 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
   const addEducation = () => {
     onChange({
       ...data,
-      education: [...data.education, { school: '', degree: '', startDate: '', endDate: '', description: '' }]
+      education: [...data.education, { school: '', degree: '', startDate: '', endDate: '', description: '', gpa: '' }]
     });
   };
 
@@ -73,8 +73,15 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
     onChange({ ...data, education: data.education.filter((_, i) => i !== index) });
   };
 
+  // Scroll skills input into view when focused on mobile
+  const handleSkillsFocus = () => {
+    setTimeout(() => {
+      skillsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  };
+
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-6 pb-40">
       {/* Personal Info */}
       <section className="form-section-card space-y-4">
         <div className="flex items-center gap-2 text-slate-900 mb-2">
@@ -87,7 +94,19 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
           <Input label="Email" value={data.personalInfo.email} onChange={(v) => updatePersonalInfo('email', v)} />
           <Input label="Phone" value={data.personalInfo.phone} onChange={(v) => updatePersonalInfo('phone', v)} />
           <Input label="Location" value={data.personalInfo.location} onChange={(v) => updatePersonalInfo('location', v)} />
-          <Input label="Website" value={data.personalInfo.website || ''} onChange={(v) => updatePersonalInfo('website', v)} />
+          {/* LinkedIn replaces Website */}
+          <div className="space-y-1">
+            <label className="input-label-sm flex items-center gap-1">
+              <Linkedin className="h-3 w-3 text-blue-600" />
+              LinkedIn Profile
+            </label>
+            <input
+              className="w-full p-2 rounded-md border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-100 outline-none text-slate-800 text-sm transition-all bg-white"
+              value={data.personalInfo.linkedin || ''}
+              onChange={(e) => updatePersonalInfo('linkedin', e.target.value)}
+              placeholder="linkedin.com/in/yourname"
+            />
+          </div>
         </div>
         <div className="space-y-2">
           <div className="flex justify-between items-center">
@@ -180,9 +199,21 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
                 <Input label="Degree" value={edu.degree} onChange={(v) => updateEducation(index, 'degree', v)} />
                 <Input label="From" value={edu.startDate} onChange={(v) => updateEducation(index, 'startDate', v)} />
                 <Input label="To" value={edu.endDate} onChange={(v) => updateEducation(index, 'endDate', v)} />
+                {/* GPA / Percentage field */}
+                <Input 
+                  label="GPA / Percentage (optional)" 
+                  value={edu.gpa || ''} 
+                  onChange={(v) => updateEducation(index, 'gpa', v)}
+                  placeholder="e.g. 8.5 CGPA or 85%"
+                />
               </div>
             </div>
           ))}
+          {data.education.length === 0 && (
+            <button onClick={addEducation} className="w-full py-4 border-2 border-dashed border-slate-200 rounded-lg text-slate-400 text-xs font-bold uppercase tracking-widest hover:border-blue-300 hover:text-blue-500 transition-all">
+              + Add Education
+            </button>
+          )}
         </div>
       </section>
 
@@ -197,16 +228,19 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
         <div className="space-y-4">
           <div>
             <label className="input-label-sm">Skills (Comma separated)</label>
-            <input 
+            {/* Fixed: textarea instead of input so keyboard doesn't cover it on mobile */}
+            <input
+              ref={skillsRef}
               className="w-full p-2.5 rounded-md border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-100 outline-none text-slate-700 text-sm transition-all"
               value={data.skills.join(', ')}
               onChange={(e) => onChange({ ...data, skills: e.target.value.split(',').map(s => s.trim()) })}
               placeholder="e.g. Figma, Tailwind CSS, React"
+              onFocus={handleSkillsFocus}
             />
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 pb-6">
             {data.skills.map((s, i) => s && (
-               <span key={i} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-[10px] font-bold uppercase tracking-wider">{s}</span>
+              <span key={i} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-[10px] font-bold uppercase tracking-wider">{s}</span>
             ))}
           </div>
         </div>
@@ -215,13 +249,14 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
   );
 };
 
-const Input = ({ label, value, onChange }: { label: string, value: string, onChange: (v: string) => void }) => (
+const Input = ({ label, value, onChange, placeholder }: { label: string, value: string, onChange: (v: string) => void, placeholder?: string }) => (
   <div className="space-y-1">
     <label className="input-label-sm">{label}</label>
     <input 
       className="w-full p-2 rounded-md border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-100 outline-none text-slate-800 text-sm transition-all bg-white"
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
     />
   </div>
 );
