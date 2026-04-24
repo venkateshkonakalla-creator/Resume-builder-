@@ -96,12 +96,12 @@ export default function App() {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-full mx-auto w-full flex overflow-hidden no-print">
+      <main className="flex-1 max-w-full mx-auto w-full flex overflow-hidden">
         {/* Editor Aside */}
         <motion.aside 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className={`w-full lg:w-[450px] bg-slate-50 border-r border-slate-200 p-6 md:p-8 overflow-y-auto shrink-0 ${activeTab === 'preview' ? 'hidden lg:block' : 'block'}`}
+          className={`w-full lg:w-[450px] bg-slate-50 border-r border-slate-200 p-6 md:p-8 overflow-y-auto shrink-0 no-print ${activeTab === 'preview' ? 'hidden lg:block' : 'block'}`}
         >
           <div className="mb-8">
             <h2 className="text-lg font-bold text-slate-900 tracking-tight">Project Dashboard</h2>
@@ -117,7 +117,7 @@ export default function App() {
           className={`flex-1 bg-slate-200/40 p-6 md:p-10 overflow-y-auto flex flex-col items-center ${activeTab === 'edit' ? 'hidden lg:flex' : 'flex'}`}
         >
           <div className="w-full max-w-4xl">
-            <div className="mb-6 flex justify-between items-center">
+            <div className="mb-6 flex justify-between items-center no-print">
                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Visual Canvas</h3>
             </div>
             <ResumePreview 

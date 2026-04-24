@@ -14,7 +14,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { ResumeData, Experience, Education, Project } from '../types';
-import { enhanceText } from '../lib/gemini';
+import { enhanceSummary } from '../lib/gemini';
+import { BannerAd } from './Ads';
 
 interface Props {
   data: ResumeData;
@@ -31,9 +32,9 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
     });
   };
 
-  const handleEnhance = async (field: 'summary', value: string) => {
-    setIsEnhancing(field);
-    const enhanced = await enhanceText(value, 'summary');
+  const handleEnhance = async () => {
+    setIsEnhancing('summary');
+    const enhanced = await enhanceSummary(data);
     updatePersonalInfo('summary', enhanced);
     setIsEnhancing(null);
   };
@@ -92,8 +93,8 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
           <div className="flex justify-between items-center">
             <label className="input-label-sm">Professional Summary</label>
             <button 
-              onClick={() => handleEnhance('summary', data.personalInfo.summary)}
-              disabled={isEnhancing === 'summary'}
+              onClick={handleEnhance}
+              disabled={!!isEnhancing}
               className="text-[10px] flex items-center gap-1 text-blue-600 hover:text-blue-700 font-bold uppercase tracking-wider disabled:opacity-50"
             >
               <Sparkles className="h-3 w-3" />
@@ -107,6 +108,8 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
           />
         </div>
       </section>
+
+      <BannerAd />
 
       {/* Experience */}
       <section className="form-section-card space-y-4">
@@ -150,6 +153,8 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
         </div>
       </section>
 
+      <BannerAd />
+
       {/* Education */}
       <section className="form-section-card space-y-4">
         <div className="flex items-center justify-between mb-2">
@@ -180,6 +185,8 @@ export const ResumeForm: React.FC<Props> = ({ data, onChange }) => {
           ))}
         </div>
       </section>
+
+      <BannerAd />
 
       {/* Skills */}
       <section className="form-section-card space-y-4">
