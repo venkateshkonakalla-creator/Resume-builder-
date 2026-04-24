@@ -7,7 +7,7 @@ import { CreativeTemplate } from './templates/CreativeTemplate';
 import { RewardedAd } from './Ads';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 
 interface Props {
   data: ResumeData;
